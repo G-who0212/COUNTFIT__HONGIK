@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Cam</title>
+    <style>
+        #count-container {
+            margin-top: 20px;
+            font-size: 48px;
+            font-weight: bold;
+            color: #FF0000; /* 빨간색 글자 */
+        }
+    </style>
+</head>
+<body>
+    <h1>Web Cam</h1>
+
+    <video id="video"></video>
+    <div id="count-container">Count: <span id="count">0</span></div>
+
+    <script type="text/javascript">
+        let url = `ws://${window.location.host}/ws/socket-server/`;
+        const chatSocket = new WebSocket(url);
+    
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                const videoElement = document.getElementById('video');
+                videoElement.srcObject = stream;
+                videoElement.play();
+
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+    
+                const sendFrame = () => {
+                    canvas.width = videoElement.videoWidth;
+                    canvas.height = videoElement.videoHeight;
+                    // canvas.width = 320; // 원하는 크기
+                    // canvas.height = 240; // 원하는 크기
+                    context.drawImage(videoElement, 0, 0);
+    
+                    const frameData = canvas.toDataURL('image/webp', 0.5); 
+                    const base64Data = frameData.split(',')[1];
+    
+                    chatSocket.send(JSON.stringify({
+                        'type': 'video_frame',
+                        'data': base64Data
+                    }));
+    
+                    console.log('Sending frame:', base64Data);
+                    // requestAnimationFrame(sendFrame); // 주석처리 해야함
+                };
+                setInterval(sendFrame, 1000); // 1초마다 sendFrame 호출
+                // sendFrame(); // 주석처리 해야함
+            })
+            .catch(err => console.error(err));
+    
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            if (data.type === 'count_update') {
+                const countElement = document.getElementById('count');
+                countElement.textContent = data.count;
+            }
+        };
+    </script>
+</body>
+</html>
