@@ -51,3 +51,4 @@ urllib3==2.2.2
 wrapt==1.16.0
 yacs==0.1.8
 zope.interface==6.4.post2
+django-filter==2.4.0
