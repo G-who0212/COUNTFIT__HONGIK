@@ -76,8 +76,8 @@ class ChatConsumer(WebsocketConsumer):
         self.pose_model = get_pose_net(cfg, is_train=False)
 
         # S3에서 모델 파일 다운로드 (필요한 경우)
-        aws_key = 'X'
-        aws_secret = 'X'
+        aws_key = 'XXX'
+        aws_secret = 'XXX'
         s3 = boto3.client('s3', aws_access_key_id=aws_key, aws_secret_access_key=aws_secret)
         bucket_name = 'pose-hrnet-path'
         file_name = 'pose_hrnet_w32_384x288.pth'
@@ -113,7 +113,7 @@ class ChatConsumer(WebsocketConsumer):
                 # OpenCV 이미지로 변환
                 image_bgr = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
 
-                # print(f"image_bgr shape: {image_bgr.shape}") # (640, 320, 3)
+                # print(f"image_bgr shape: {image_bgr.shape}") # (640, 480, 3)
                 # resized_image = cv2.resize(image_bgr, (320, 240))
                 # resized_image = cv2.resize(image_bgr, (160, 120))
                 

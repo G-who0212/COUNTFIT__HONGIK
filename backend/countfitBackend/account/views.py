@@ -4,8 +4,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView, status
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import Token # access token & refresh token
+from rest_framework import generics
 
-from .serializers import UserLoginSerializer, UserRegisterSerializer
+from .serializers import UserLoginSerializer, UserRegisterSerializer, UserInfoListSerializer
+from .models import User, Record
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 class UserRegisterAPIView(APIView):
@@ -44,3 +47,13 @@ class UserLoginAPIView(APIView):
                 status=status.HTTP_200_OK,
             )
         return Response(token_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# class UserInfoListAPIView(generics.ListAPIView):
+#     # queryset = User.objects.all()
+#     # serializer_class = UserInfoListSerializer
+#     # filter_backends = [DjangoFilterBackend]
+#     # filterset_fields = ['nickname']
+
+# class UserInfoAPIView(APIView):
+#     # def put(self, request):
+    

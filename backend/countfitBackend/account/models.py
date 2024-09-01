@@ -25,3 +25,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def is_staff(self):
         return self.is_admin
+    
+class Record(models.Model):
+    sport_type = models.CharField(max_length=200, null=False)
+    aim_count = models.IntegerField(null=False)
+    done_count = models.IntegerField(null=False)
+    done_at = models.DateTimeField(null=False)
+    user_nickname = models.ForeignKey(User, on_delete=models.CASCADE)
